@@ -3,6 +3,8 @@ package tech.dsstudio.minecraft.worldtimer;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -70,6 +72,44 @@ public class Main extends JavaPlugin implements Listener {
 		data.set(WORLD_KEY_NAME, targetWorldName);
 		if (limitDescriptors.containsKey(targetWorldName) && !player.hasPermission("wtexempt")) {
 			applyWorldLimit(player, data);
+		}
+	}
+
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if (command.getName().equals("wt")) {
+			if (args.length > 2 || args.length < 1) {
+				return false;
+			}
+			String playerName;
+			if (args.length == 1) {
+				if (!(sender instanceof Player)) {
+					sender.sendMessage("You have to specify a player");
+					return false;
+				} else {
+					playerName = sender.getName();
+				}
+			} else {
+				playerName = args[1];
+			}
+			Player player = getServer().getPlayer(playerName);
+			if (player == null) {
+				sender.sendMessage("Player is not online");
+				return true;
+			}
+			switch (args[0]) {
+				case "pause":
+					suspendTimer(player);
+					break;
+				case "resume":
+					resumeTimer(player);
+					break;
+				default:
+					return false;
+			}
+			return true;
+		} else {
+			return false;
 		}
 	}
 
