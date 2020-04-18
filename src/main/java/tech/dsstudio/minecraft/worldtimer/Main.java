@@ -119,12 +119,20 @@ public class Main extends JavaPlugin implements Listener {
 			TaskDescriptor task = (TaskDescriptor) data.getVolatileOrFail(MASTER_TASK_KEY_NAME);
 			task.suspend();
 		}
+		if (data.hasVolatileKey(BOSS_BAR_TASK_KEY_NAME)) {
+			TaskDescriptor task = (TaskDescriptor) data.getVolatileOrFail(BOSS_BAR_TASK_KEY_NAME);
+			task.suspend();
+		}
 	}
 	
 	public void resumeTimer(@NotNull Player player) {
 		PlayerData data = storage.get(player.getUniqueId());
 		if (data.hasVolatileKey(MASTER_TASK_KEY_NAME)) {
 			TaskDescriptor task = (TaskDescriptor) data.getVolatileOrFail(MASTER_TASK_KEY_NAME);
+			task.resume();
+		}
+		if (data.hasVolatileKey(BOSS_BAR_TASK_KEY_NAME)) {
+			TaskDescriptor task = (TaskDescriptor) data.getVolatileOrFail(BOSS_BAR_TASK_KEY_NAME);
 			task.resume();
 		}
 	}
